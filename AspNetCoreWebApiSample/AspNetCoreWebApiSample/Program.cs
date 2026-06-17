@@ -103,24 +103,29 @@ namespace AspNetCoreWebApiSample
                 conn.CommandText = "INSERT OR IGNORE INTO user(id,name,age) VALUES('chul','Kim Chulsoo',23),('yung','Kim Yunghee',24);";
                 conn.ExecuteNonQuery();
 
+                object _lock = new object();
+
                 app.MapGet("/select", (string id) =>
                 {
-                    // warning: At the line below, SQL injection is possible.
-                    conn.CommandText = "SELECT id,name,age FROM user WHERE id = '" + id + "';";
-
-                    using (SQLiteDataReader rdr = conn.ExecuteReader())
+                    lock (_lock)
                     {
-                        while (rdr.Read())
-                        {
-                            string rid = rdr.GetString(0);
-                            string name = rdr.GetString(1);
-                            int age = rdr.GetInt32(2);
-                            var user = new User(rid, name, age);
-                            return GetResultB(user);
-                        }
-                    }
+                        // warning: At the line below, SQL injection is possible.
+                        conn.CommandText = "SELECT id,name,age FROM user WHERE id = '" + id + "';";
 
-                    return default;
+                        using (SQLiteDataReader rdr = conn.ExecuteReader())
+                        {
+                            while (rdr.Read())
+                            {
+                                string rid = rdr.GetString(0);
+                                string name = rdr.GetString(1);
+                                int age = rdr.GetInt32(2);
+                                var user = new User(rid, name, age);
+                                return GetResultB(user);
+                            }
+                        }
+
+                        return Results.InternalServerError();
+                    }
                 });
 
                 app.Run();
