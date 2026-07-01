@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="Discord/Discord.csproj" Id="e10ebb2a-2b8b-44da-b22a-51921b76c4fc" />
+  <Project Path="NaverCafe/NaverCafe.csproj" />
   <Project Path="NaverNews/NaverNews.csproj" />
 </Solution>

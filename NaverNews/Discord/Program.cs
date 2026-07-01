@@ -23,7 +23,7 @@ namespace Discord
         {
             if (args.Length != 2)
             {
-                Console.Error.WriteLine("error: argc must be 2");
+                Console.WriteLine("usage: ./Discord <Discord webhook URI> <executable file name>");
                 return;
             }
 
